@@ -23,7 +23,7 @@ jobs:
 
     steps:
 
-    - name: Checkout to the branch
+    - name: Checkout the 'deploy' branch
       uses: actions/checkout@v4
       with:
         ref: deploy
@@ -46,6 +46,8 @@ jobs:
       uses: azure/CLI@v1
       with:
         inlineScript: >
+          pwd
+          ls
           echo "Creating resources"
 
           az deployment group create --resource-group ${{ env.RESOURCE_GROUP_NAME }} --template-file '/Azure/main.bicep' --debug

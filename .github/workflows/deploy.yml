@@ -38,6 +38,8 @@ jobs:
       with:
         inlineScript: >
           echo "Creating resource group in Azure"
+          pwd
+          ls -la
           echo "Executing 'az group create -l ${{ env.REGION }} -n ${{ env.RESOURCE_GROUP_NAME }}'"
 
           az group create -l ${{ env.REGION }} -n ${{ env.RESOURCE_GROUP_NAME }}
@@ -46,10 +48,8 @@ jobs:
       uses: azure/CLI@v1
       with:
         inlineScript: >
-          pwd
-          ls
           echo "Creating resources"
-
+          
           az deployment group create --resource-group ${{ env.RESOURCE_GROUP_NAME }} --template-file '/Azure/main.bicep' --debug
 
   build:

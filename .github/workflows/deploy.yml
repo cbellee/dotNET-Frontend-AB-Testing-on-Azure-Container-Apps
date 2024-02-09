@@ -9,7 +9,7 @@ on:
 env:
   
   # alphanumeric string under 14 characters
-  RESOURCE_GROUP_NAME: aca-featureflags-rg
+  RESOURCE_GROUP_NAME: acafeatureflags
 
   # specify your preferred region
   REGION: australiaeast

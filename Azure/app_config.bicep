@@ -20,7 +20,7 @@ resource appConfig 'Microsoft.AppConfiguration/configurationStores@2021-10-01-pr
   location: location
   name: configStoreName
   sku: {
-    name: 'free'
+    name: 'Standard'
   }
 }
 

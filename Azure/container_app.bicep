@@ -6,7 +6,6 @@ param envVars array = []
 param registry string
 param minReplicas int = 1
 param maxReplicas int = 1
-param azureContainerRegistry string
 
 var userAssignedIdentityName = 'aca-umid'
 var acrPullDefinitionId = '7f951dda-4ed3-4680-a7ca-43fe172d538d'
@@ -17,11 +16,11 @@ resource identity 'Microsoft.ManagedIdentity/userAssignedIdentities@2022-01-31-p
 }
 
 resource acr 'Microsoft.ContainerRegistry/registries@2023-11-01-preview' existing = {
-  name: azureContainerRegistry
+  name: registry
 }
 
 resource roleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
-  name: guid(resourceGroup().id, azureContainerRegistry, 'AcrPull')
+  name: guid(resourceGroup().id, acr.name, 'AcrPull')
   scope: acr
   properties: {
     principalId: identity.properties.principalId
@@ -45,7 +44,7 @@ resource containerApp 'Microsoft.App/containerApps@2023-08-01-preview' = {
       activeRevisionsMode: 'multiple'
       registries: [
         {
-          server: registry
+          server: acr.properties.loginServer
         }
       ]
       ingress: {

@@ -63,6 +63,5 @@ module frontend 'container_app.bicep' = {
     containerAppEnvironmentId: env.outputs.id
     registry: acr.name
     envVars: shared_config
-    azureContainerRegistry: acr.properties.loginServer
   }
 }

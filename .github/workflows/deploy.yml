@@ -120,8 +120,6 @@ jobs:
       uses: azure/CLI@v1
       with:
         inlineScript: >
-          az containerapp registry set -n frontend -g ${{ env.RESOURCE_GROUP_NAME }} --server ${{ env.RESOURCE_GROUP_NAME }}acr.azurecr.io
-
           az containerapp update -n frontend -g ${{ env.RESOURCE_GROUP_NAME }} -i ${{ env.RESOURCE_GROUP_NAME }}acr.azurecr.io/${{ env.FRONTEND_IMAGE }}:${{ github.sha }}
 
     - name: logout

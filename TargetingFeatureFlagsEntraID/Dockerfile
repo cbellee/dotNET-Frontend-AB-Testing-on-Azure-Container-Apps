@@ -7,7 +7,7 @@ EXPOSE 80
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
 COPY ["TargetingFeatureFlagsEntraID/TargetingFeatureFlagsEntraID.csproj", "TargetingFeatureFlagsEntraID/"]
-RUN dotnet restore "FeatureFlagsWithContainerApps/FeatureFlagsWithContainerApps.csproj"
+RUN dotnet restore "TargetingFeatureFlagsEntraID/TargetingFeatureFlagsEntraID.csproj"
 COPY . .
 WORKDIR "/src/TargetingFeatureFlagsEntraID"
 RUN dotnet build "TargetingFeatureFlagsEntraID.csproj" -c Release -o /app/build

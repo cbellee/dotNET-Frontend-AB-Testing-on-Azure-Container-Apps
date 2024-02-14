@@ -6,28 +6,46 @@ param envVars array = []
 param registry string
 param minReplicas int = 1
 param maxReplicas int = 1
-param registryUsername string
-@secure()
-param registryPassword string
+param azureContainerRegistry string
 
-resource containerApp 'Microsoft.App/containerApps@2023-08-01-preview' ={
+var userAssignedIdentityName = 'aca-umid'
+var acrPullDefinitionId = '7f951dda-4ed3-4680-a7ca-43fe172d538d'
+
+resource identity 'Microsoft.ManagedIdentity/userAssignedIdentities@2022-01-31-preview' = {
+  name: userAssignedIdentityName
+  location: location
+}
+
+resource acr 'Microsoft.ContainerRegistry/registries@2023-11-01-preview' existing = {
+  name: azureContainerRegistry
+}
+
+resource roleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid(resourceGroup().id, azureContainerRegistry, 'AcrPull')
+  scope: acr
+  properties: {
+    principalId: identity.properties.principalId
+    principalType: 'ServicePrincipal'
+    roleDefinitionId: resourceId('Microsoft.Authorization/roleDefinitions', acrPullDefinitionId)
+  }
+}
+
+resource containerApp 'Microsoft.App/containerApps@2023-08-01-preview' = {
   name: name
   location: location
-  properties:{
+  identity: {
+    type: 'UserAssigned'
+    userAssignedIdentities: {
+      '${identity.id}': {}
+    }
+  }
+  properties: {
     managedEnvironmentId: containerAppEnvironmentId
     configuration: {
       activeRevisionsMode: 'multiple'
-      secrets: [
-        {
-          name: 'container-registry-password'
-          value: registryPassword
-        }
-      ]      
       registries: [
         {
           server: registry
-          username: registryUsername
-          passwordSecretRef: 'container-registry-password'
         }
       ]
       ingress: {

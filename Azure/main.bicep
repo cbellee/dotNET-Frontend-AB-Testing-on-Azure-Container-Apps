@@ -8,7 +8,7 @@ resource acr 'Microsoft.ContainerRegistry/registries@2023-11-01-preview' = {
     name: 'Basic'
   }
   properties: {
-    adminUserEnabled: true
+    adminUserEnabled: false
   }
 }
 
@@ -21,7 +21,7 @@ module env 'environment.bicep' = {
 }
 
 // create the azure app configuration
-module appConfig 'app_config.bicep' ={
+module appConfig 'app_config.bicep' = {
   name: 'appConfiguration'
   params: {
     location: location
@@ -60,11 +60,9 @@ module frontend 'container_app.bicep' = {
   params: {
     name: 'frontend'
     location: location
-    registryPassword: acr.listCredentials().passwords[0].value
-    registryUsername: acr.listCredentials().username
     containerAppEnvironmentId: env.outputs.id
     registry: acr.name
     envVars: shared_config
+    azureContainerRegistry: acr.name
   }
 }
-

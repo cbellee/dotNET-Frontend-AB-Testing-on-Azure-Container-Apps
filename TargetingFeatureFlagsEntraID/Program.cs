@@ -32,16 +32,11 @@ string connectionString = builder.Configuration.GetConnectionString("AppConfig")
 builder.Configuration.AddAzureAppConfiguration(options =>
 options
     .Connect(connectionString)
-    //.UseFeatureFlags(featureFlagOptions => featureFlagOptions.Label = builder.Configuration.GetValue<string>("Beta"))
-    //.ConfigureRefresh(refreshOptions => refreshOptions.Register("Beta"))
     .UseFeatureFlags()
 );
 
-//builder.Services.AddFeatureManagement(Configuration.GetSection("MyFeatureFlags"));
-
 builder.Services.AddFeatureManagement().AddFeatureFilter<TargetingFilter>();
 builder.Services.TryAddSingleton<ITargetingContextAccessor, TestTargetingContextAccessor>();
-//builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
@@ -58,6 +53,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthorization();
+app.UseHttpsRedirection();
 
 app.MapControllerRoute(
     name: "default",

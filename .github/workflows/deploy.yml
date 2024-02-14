@@ -14,7 +14,7 @@ env:
   # specify your preferred region
   REGION: australiaeast
 
-  FRONTEND_DOCKER: FeatureFlagsWithContainerApps/Dockerfile
+  FRONTEND_DOCKER: TargetingFeatureFlagsEntraID/Dockerfile
   FRONTEND_IMAGE: frontend
 
 jobs:

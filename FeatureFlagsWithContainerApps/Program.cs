@@ -1,4 +1,5 @@
 using Microsoft.FeatureManagement;
+using Microsoft.FeatureManagement.FeatureFilters;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +14,8 @@ builder.Services.AddRazorPages();
 builder.Services.AddControllersWithViews();
 builder.Services.AddFeatureManagement();
 builder.Services.AddWebApplicationMonitoring();
+builder.Services.AddFeatureManagement(builder.Configuration.GetSection("FeatureFlags"))
+    .AddFeatureFilter<TargetingFilter>();
 
 var app = builder.Build();
 

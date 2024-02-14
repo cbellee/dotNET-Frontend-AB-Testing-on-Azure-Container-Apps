@@ -23,7 +23,7 @@ jobs:
 
     steps:
 
-    - name: Checkout the 'deploy' branch
+    - name: Checkout the 'deploy' branch 
       uses: actions/checkout@v4
       with:
         ref: deploy

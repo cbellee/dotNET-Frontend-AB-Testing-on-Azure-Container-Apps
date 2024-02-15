@@ -38,10 +38,6 @@ options
 builder.Services.AddFeatureManagement().AddFeatureFilter<TargetingFilter>();
 builder.Services.TryAddSingleton<ITargetingContextAccessor, TestTargetingContextAccessor>();
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddHttpsRedirection(options =>
-{
-    options.HttpsPort = 443;
-});
 
 var app = builder.Build();
 
@@ -53,7 +49,6 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthorization();

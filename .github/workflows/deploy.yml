@@ -119,6 +119,11 @@ jobs:
       with:
         inlineScript: >
           az containerapp update -n frontend --revision-suffix ${GITHUB_REF##*/} -g ${{ env.RESOURCE_GROUP_NAME }} -i ${{ env.RESOURCE_GROUP_NAME }}acr.azurecr.io/${{ env.FRONTEND_IMAGE }}:${GITHUB_REF##*/}-${{ github.sha }}
+          
+          az containerapp ingress traffic set \
+            --name frontend \
+            --resource-group ${{ env.RESOURCE_GROUP_NAME }} \
+            --label-weight deploy=50 beta=50
 
     - name: logout
       run: >

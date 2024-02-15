@@ -8,6 +8,7 @@ using Microsoft.Identity.Web.UI;
 using TestFeatureFlags;
 using Microsoft.FeatureManagement;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.AspNetCore.HttpOverrides;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -41,6 +42,22 @@ builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
 
+if (string.Equals(
+        Environment.GetEnvironmentVariable("ASPNETCORE_FORWARDEDHEADERS_ENABLED"),
+        "true", StringComparison.OrdinalIgnoreCase))
+{
+    builder.Services.Configure<ForwardedHeadersOptions>(options =>
+    {
+        options.ForwardedHeaders = ForwardedHeaders.XForwardedFor |
+            ForwardedHeaders.XForwardedProto;
+        // Only loopback proxies are allowed by default.
+        // Clear that restriction because forwarders are enabled by explicit 
+        // configuration.
+        options.KnownNetworks.Clear();
+        options.KnownProxies.Clear();
+    });
+}
+
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
@@ -53,9 +70,11 @@ app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthorization();
 
+
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 app.MapRazorPages();
+
 
 app.Run();

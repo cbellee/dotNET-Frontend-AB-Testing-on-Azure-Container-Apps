@@ -24,9 +24,9 @@ jobs:
 
     steps:
     - name: Branch name
-      run: echo "running on branch ${GITHUB_REF##*/}""
+      run: echo "running on branch ${GITHUB_REF##*/}"
 
-    - name: Checkout the '${GITHUB_REF##*/}' branch 
+    - name: Checkout out branch 
       uses: actions/checkout@v4
       with:
         ref: ${GITHUB_REF##*/}

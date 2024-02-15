@@ -40,7 +40,7 @@ builder.Services.AddFeatureManagement().AddFeatureFilter<TargetingFilter>();
 builder.Services.TryAddSingleton<ITargetingContextAccessor, TestTargetingContextAccessor>();
 builder.Services.AddHttpContextAccessor();
 
-if (string.Equals(
+/* if (string.Equals(
         Environment.GetEnvironmentVariable("ASPNETCORE_FORWARDEDHEADERS_ENABLED"),
         "true", StringComparison.OrdinalIgnoreCase))
 {
@@ -54,7 +54,7 @@ if (string.Equals(
         options.KnownNetworks.Clear();
         options.KnownProxies.Clear();
     });
-}
+} */
 
 var app = builder.Build();
 

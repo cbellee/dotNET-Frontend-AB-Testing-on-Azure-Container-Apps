@@ -23,13 +23,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Checkout branch 
+      uses: actions/checkout@v4
+    
     - name: Branch name
       run: echo "running on branch ${GITHUB_REF##*/}"
-
-    - name: Checkout out branch 
-      uses: actions/checkout@v4
-      with:
-        ref: ${GITHUB_REF##*/}
 
     - name: Azure Login
       uses: azure/login@v1

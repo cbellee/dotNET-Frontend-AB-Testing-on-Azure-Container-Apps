@@ -38,7 +38,7 @@ var shared_config = [
   }
   {
     name: 'ASPNETCORE_FORWARDEDHEADERS_ENABLED'
-    value: true
+    value: 'true'
   }
   {
     name: 'APPINSIGHTS_INSTRUMENTATIONKEY'

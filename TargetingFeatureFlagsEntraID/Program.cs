@@ -28,34 +28,6 @@ builder.Services.AddControllersWithViews(options =>
 builder.Services.AddRazorPages()
     .AddMicrosoftIdentityUI();
 
-string connectionString = builder.Configuration.GetConnectionString("AppConfig");
-
-builder.Configuration.AddAzureAppConfiguration(options =>
-options
-    .Connect(connectionString)
-    .UseFeatureFlags()
-);
-
-builder.Services.AddFeatureManagement().AddFeatureFilter<TargetingFilter>();
-builder.Services.TryAddSingleton<ITargetingContextAccessor, TestTargetingContextAccessor>();
-builder.Services.AddHttpContextAccessor();
-
-/* if (string.Equals(
-        Environment.GetEnvironmentVariable("ASPNETCORE_FORWARDEDHEADERS_ENABLED"),
-        "true", StringComparison.OrdinalIgnoreCase))
-{
-    builder.Services.Configure<ForwardedHeadersOptions>(options =>
-    {
-        options.ForwardedHeaders = ForwardedHeaders.XForwardedFor |
-            ForwardedHeaders.XForwardedProto;
-        // Only loopback proxies are allowed by default.
-        // Clear that restriction because forwarders are enabled by explicit 
-        // configuration.
-        options.KnownNetworks.Clear();
-        options.KnownProxies.Clear();
-    });
-} */
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -70,11 +42,9 @@ app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthorization();
 
-
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 app.MapRazorPages();
-
 
 app.Run();

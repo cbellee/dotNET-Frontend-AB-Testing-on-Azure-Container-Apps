@@ -37,7 +37,7 @@ var shared_config = [
     value: 'Production'
   }
   {
-    name: 'ASPNETCORE_FORWARDEDHEADERS_ENABLED'
+    name: 'ASPNETCORE_FORWARDEDHEADERS_ENABLED' // required for HTTPS authN redirect in ACA, otherwise redirect is HTTP & fails
     value: 'true'
   }
   {

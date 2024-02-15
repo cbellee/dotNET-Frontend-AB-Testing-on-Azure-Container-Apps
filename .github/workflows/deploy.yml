@@ -118,7 +118,7 @@ jobs:
       uses: azure/CLI@v1
       with:
         inlineScript: >
-          az containerapp update -n frontend -g ${{ env.RESOURCE_GROUP_NAME }} -i ${{ env.RESOURCE_GROUP_NAME }}acr.azurecr.io/${{ env.FRONTEND_IMAGE }}:${GITHUB_REF##*/}-${{ github.sha }}
+          az containerapp update -n frontend --revision-suffix ${GITHUB_REF##*/} -g ${{ env.RESOURCE_GROUP_NAME }} -i ${{ env.RESOURCE_GROUP_NAME }}acr.azurecr.io/${{ env.FRONTEND_IMAGE }}:${GITHUB_REF##*/}-${{ github.sha }}
 
     - name: logout
       run: >

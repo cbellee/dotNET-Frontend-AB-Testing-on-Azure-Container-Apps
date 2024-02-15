@@ -34,7 +34,11 @@ module appConfig 'app_config.bicep' = {
 var shared_config = [
   {
     name: 'ASPNETCORE_ENVIRONMENT'
-    value: 'Development'
+    value: 'Production'
+  }
+  {
+    name: 'ASPNETCORE_FORWARDEDHEADERS_ENABLED'
+    value: true
   }
   {
     name: 'APPINSIGHTS_INSTRUMENTATIONKEY'

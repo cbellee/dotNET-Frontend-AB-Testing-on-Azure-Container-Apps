@@ -4,6 +4,7 @@ on:
   push:
     branches:
     - deploy
+    - beta
   workflow_dispatch:  
 
 env:
@@ -22,22 +23,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Branch name
+      run: echo "running on branch ${GITHUB_REF##*/}""
 
-    - name: Checkout the 'deploy' branch 
+    - name: Checkout the '${GITHUB_REF##*/}' branch 
       uses: actions/checkout@v4
       with:
-        ref: deploy
+        ref: ${GITHUB_REF##*/}
 
     - name: Azure Login
       uses: azure/login@v1
       with:
         creds: ${{ secrets.AzureSPN }}
-      
-    - name: Test
-      run: |
-        echo "Testing"
-        ls
-        pwd
 
     - name: Create resource group
       uses: azure/CLI@v1
@@ -53,7 +50,6 @@ jobs:
       with:
         inlineScript: >
           echo "Creating resources"
-          
           az deployment group create --resource-group ${{ env.RESOURCE_GROUP_NAME }} --template-file 'Azure/main.bicep' --debug
 
   build:
@@ -65,6 +61,9 @@ jobs:
     - name: Checkout to the branch
       uses: actions/checkout@v2
 
+    - name: Branch name
+      run: echo "running on branch ${GITHUB_REF##*/}""
+
     - name: Azure Login
       uses: azure/login@v1
       with:
@@ -73,18 +72,18 @@ jobs:
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v1
 
-    - name: Login to ACR
-      run: |
-        set -euo pipefail
-        access_token=$(az account get-access-token --query accessToken -o tsv)
-        refresh_token=$(curl https://${{ env.RESOURCE_GROUP_NAME }}acr.azurecr.io/oauth2/exchange -v -d "grant_type=access_token&service=${{ env.RESOURCE_GROUP_NAME }}acr.azurecr.io&access_token=$access_token" | jq -r .refresh_token)
-        docker login -u 00000000-0000-0000-0000-000000000000 --password-stdin ${{ env.RESOURCE_GROUP_NAME }}acr.azurecr.io <<< "$refresh_token"
+  # - name: Login to ACR
+  #     run: |
+  #     set -euo pipefail
+  #     access_token=$(az account get-access-token --query accessToken -o tsv)
+  #     refresh_token=$(curl https://${{ env.RESOURCE_GROUP_NAME }}acr.azurecr.io/oauth2/exchange -v -d "grant_type=access_token&service=${{ env.RESOURCE_GROUP_NAME }}acr.azurecr.io&access_token=$access_token" | jq -r .refresh_token)
+  #     docker login -u 00000000-0000-0000-0000-000000000000 --password-stdin ${{ env.RESOURCE_GROUP_NAME }}acr.azurecr.io <<< "$refresh_token"
 
     - name: Build the frontend image and push it to ACR
       uses: docker/build-push-action@v2
       with:
         push: true
-        tags: ${{ env.RESOURCE_GROUP_NAME }}acr.azurecr.io/${{ env.FRONTEND_IMAGE }}:${{ github.sha }}
+        tags: ${{ env.RESOURCE_GROUP_NAME }}acr.azurecr.io/${{ env.FRONTEND_IMAGE }}:${GITHUB_REF##*/}-${{ github.sha }}
         file: ${{ env.FRONTEND_DOCKER }}
 
   deploy:
@@ -106,21 +105,20 @@ jobs:
       with:
         inlineScript: >
           az config set extension.use_dynamic_install=yes_without_prompt
-
           az extension add --name containerapp --yes
 
-    - name: Login to ACR
-      run: |
-        set -euo pipefail
-        access_token=$(az account get-access-token --query accessToken -o tsv)
-        refresh_token=$(curl https://${{ env.RESOURCE_GROUP_NAME }}acr.azurecr.io/oauth2/exchange -v -d "grant_type=access_token&service=${{ env.RESOURCE_GROUP_NAME }}acr.azurecr.io&access_token=$access_token" | jq -r .refresh_token)
-        docker login -u 00000000-0000-0000-0000-000000000000 --password-stdin ${{ env.RESOURCE_GROUP_NAME }}acr.azurecr.io <<< "$refresh_token"
+    #- name: Login to ACR
+    #  run: |
+    #    set -euo pipefail
+    #    access_token=$(az account get-access-token --query accessToken -o tsv)
+    #    refresh_token=$(curl https://${{ env.RESOURCE_GROUP_NAME }}acr.azurecr.io/oauth2/exchange -v -d "grant_type=access_token&service=${{ env.RESOURCE_GROUP_NAME }}acr.azurecr.io&access_token=$access_token" | jq -r .refresh_token)
+    #    docker login -u 00000000-0000-0000-0000-000000000000 --password-stdin ${{ env.RESOURCE_GROUP_NAME }}acr.azurecr.io <<< "$refresh_token"
 
     - name: Deploy Container Apps
       uses: azure/CLI@v1
       with:
         inlineScript: >
-          az containerapp update -n frontend -g ${{ env.RESOURCE_GROUP_NAME }} -i ${{ env.RESOURCE_GROUP_NAME }}acr.azurecr.io/${{ env.FRONTEND_IMAGE }}:${{ github.sha }}
+          az containerapp update -n frontend --revision-suffix ${GITHUB_REF##*/} -g ${{ env.RESOURCE_GROUP_NAME }} -i ${{ env.RESOURCE_GROUP_NAME }}acr.azurecr.io/${{ env.FRONTEND_IMAGE }}:${GITHUB_REF##*/}-${{ github.sha }}
 
     - name: logout
       run: >

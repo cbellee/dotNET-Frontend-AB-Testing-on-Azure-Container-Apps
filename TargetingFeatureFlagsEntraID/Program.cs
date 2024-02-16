@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.FeatureManagement.FeatureFilters;
 using Microsoft.Identity.Web;
 using Microsoft.Identity.Web.UI;
-using TestFeatureFlags;
 using Microsoft.FeatureManagement;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.AspNetCore.HttpOverrides;

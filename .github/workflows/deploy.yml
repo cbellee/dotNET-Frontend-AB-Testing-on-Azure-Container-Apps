@@ -110,7 +110,7 @@ jobs:
       uses: azure/CLI@v1
       with:
         inlineScript: >
-          az containerapp update -n frontend --revision-suffix ${{ env.BRANCH_NAME }} -g ${{ env.RESOURCE_GROUP_NAME }} -i ${{ env.RESOURCE_GROUP_NAME }}acr.azurecr.io/${{ env.FRONTEND_IMAGE }}:${{ env.BRANCH_NAME }}-${{ github.sha }}
+          az containerapp update -n frontend --revision-suffix ${{ env.BRANCH_NAME }}-${{ github.sha }} -g ${{ env.RESOURCE_GROUP_NAME }} -i ${{ env.RESOURCE_GROUP_NAME }}acr.azurecr.io/${{ env.FRONTEND_IMAGE }}:${{ env.BRANCH_NAME }}-${{ github.sha }}
           
           az containerapp revision label add --revision frontend-${{ env.BRANCH_NAME }}-${{ github.sha }} --resource-group ${{ env.RESOURCE_GROUP_NAME }} --label ${{ env.BRANCH_NAME }}
 

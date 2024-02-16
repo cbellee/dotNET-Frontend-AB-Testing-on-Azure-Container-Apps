@@ -1,4 +1,9 @@
 param location string = resourceGroup().location
+@allowed([
+  'deploy'
+  'beta'
+])
+param label string
 
 // create the azure container registry
 resource acr 'Microsoft.ContainerRegistry/registries@2023-11-01-preview' = {
@@ -63,6 +68,7 @@ module frontend 'container_app.bicep' = {
   name: 'frontend'
   params: {
     name: 'frontend'
+    label: label
     location: location
     containerAppEnvironmentId: env.outputs.id
     registry: acr.name

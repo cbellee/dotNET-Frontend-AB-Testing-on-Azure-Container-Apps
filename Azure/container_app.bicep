@@ -1,4 +1,5 @@
 param name string
+param label string
 param location string = resourceGroup().location
 param containerAppEnvironmentId string
 param repositoryImage string = 'mcr.microsoft.com/azuredocs/containerapps-helloworld:latest'
@@ -53,6 +54,12 @@ resource containerApp 'Microsoft.App/containerApps@2023-08-01-preview' = {
         targetPort: 80
         transport: 'http'
         allowInsecure: true
+        traffic: [
+          {
+            label: label
+            weight: 50
+          }
+        ]
       }
     }
     template: {

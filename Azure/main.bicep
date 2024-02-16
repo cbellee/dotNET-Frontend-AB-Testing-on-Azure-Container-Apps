@@ -1,6 +1,6 @@
 param location string = resourceGroup().location
 @allowed([
-  'deploy'
+  'main'
   'beta'
 ])
 param label string

@@ -3,7 +3,7 @@ name: Build and deploy .NET application to Container App silo
 on:
   push:
     branches:
-    - deploy
+    - main
     - beta
   workflow_dispatch:  
 
@@ -34,12 +34,12 @@ jobs:
       run: echo "SHORT_SHA=`echo ${GITHUB_SHA} | cut -c1-8`" >> $GITHUB_ENV
 
     - name: Azure Login
-      uses: azure/login@v1
+      uses: azure/login@v2
       with:
         creds: ${{ secrets.AzureSPN }}
 
     - name: Create resource group
-      uses: azure/CLI@v1
+      uses: azure/CLI@v2
       with:
         inlineScript: >
           echo "Creating resource group in Azure"
@@ -48,7 +48,7 @@ jobs:
           az group create -l ${{ env.REGION }} -n ${{ env.RESOURCE_GROUP_NAME }}
 
     - name: Creating resources
-      uses: azure/CLI@v1
+      uses: azure/CLI@v2
       with:
         inlineScript: >
           echo "Creating resources"
@@ -70,7 +70,7 @@ jobs:
       run: echo "SHORT_SHA=`echo ${GITHUB_SHA} | cut -c1-8`" >> $GITHUB_ENV
 
     - name: Azure Login
-      uses: azure/login@v1
+      uses: azure/login@v2
       with:
         creds: ${{ secrets.AzureSPN }}
 
@@ -104,7 +104,7 @@ jobs:
       run: echo "SHORT_SHA=`echo ${GITHUB_SHA} | cut -c1-8`" >> $GITHUB_ENV
 
     - name: Azure Login
-      uses: azure/login@v1
+      uses: azure/login@v2
       with:
         creds: ${{ secrets.AzureSPN }}
 
@@ -116,7 +116,7 @@ jobs:
         docker login -u 00000000-0000-0000-0000-000000000000 --password-stdin ${{ env.RESOURCE_GROUP_NAME }}acr.azurecr.io <<< "$refresh_token"
 
     - name: Deploy Container Apps
-      uses: azure/CLI@v1
+      uses: azure/CLI@v2
       with:
         inlineScript: >
           az containerapp update -n frontend --revision-suffix ${{ env.BRANCH_NAME }}-${{ env.SHORT_SHA }} -g ${{ env.RESOURCE_GROUP_NAME }} -i ${{ env.RESOURCE_GROUP_NAME }}acr.azurecr.io/${{ env.FRONTEND_IMAGE }}:${{ env.BRANCH_NAME }}-${{ env.SHORT_SHA }}

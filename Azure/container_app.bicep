@@ -7,6 +7,7 @@ param registry string
 param minReplicas int = 1
 param maxReplicas int = 1
 
+
 var userAssignedIdentityName = 'aca-umid'
 var acrPullDefinitionId = '7f951dda-4ed3-4680-a7ca-43fe172d538d'
 

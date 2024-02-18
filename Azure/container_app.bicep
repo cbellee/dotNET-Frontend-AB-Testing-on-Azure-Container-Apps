@@ -53,7 +53,11 @@ resource containerApp 'Microsoft.App/containerApps@2023-08-01-preview' = {
         targetPort: 80
         transport: 'http'
         allowInsecure: true
-        traffic: []
+        traffic: [
+          {
+            weight: 100
+          }
+        ]
       }
     }
     template: {

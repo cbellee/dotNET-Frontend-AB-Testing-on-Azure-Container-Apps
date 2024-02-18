@@ -114,7 +114,7 @@ jobs:
           
           az containerapp revision label add --revision frontend-${{ env.BRANCH_NAME }} --resource-group ${{ env.RESOURCE_GROUP_NAME }} --label ${{ env.BRANCH_NAME }}
 
-          az containerapp ingress traffic set --name frontend --resource-group ${{ env.RESOURCE_GROUP_NAME }} --label-weight beta=50 deploy=50
+          az containerapp ingress traffic set --name frontend --resource-group ${{ env.RESOURCE_GROUP_NAME }} --label-weight latest=50 main=50
     - name: logout
       run: >
         az logout

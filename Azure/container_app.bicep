@@ -55,10 +55,6 @@ resource containerApp 'Microsoft.App/containerApps@2023-08-01-preview' = {
         transport: 'http'
         allowInsecure: true
         traffic: [
-          {
-            label: label
-            weight: 50
-          }
         ]
       }
     }

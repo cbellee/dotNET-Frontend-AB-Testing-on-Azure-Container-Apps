@@ -1,5 +1,4 @@
 param name string
-param label string
 param location string = resourceGroup().location
 param containerAppEnvironmentId string
 param repositoryImage string = 'mcr.microsoft.com/azuredocs/containerapps-helloworld:latest'

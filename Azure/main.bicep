@@ -1,10 +1,4 @@
 param location string = resourceGroup().location
-/* @allowed([
-  'main'
-  'beta'
-])
-param label string
- */
 
 // create the azure container registry
 resource acr 'Microsoft.ContainerRegistry/registries@2023-11-01-preview' = {

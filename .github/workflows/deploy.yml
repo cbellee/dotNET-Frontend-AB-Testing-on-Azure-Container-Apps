@@ -30,6 +30,9 @@ jobs:
     - name: Branch name
       run: echo "running on branch ${GITHUB_REF##*/}"
 
+    - name: Add SHORT_SHA env property with commit short sha
+      run: echo "SHORT_SHA=`echo ${GITHUB_SHA} | cut -c1-8`" >> $GITHUB_ENV
+
     - name: Azure Login
       uses: azure/login@v1
       with:

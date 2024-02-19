@@ -118,7 +118,7 @@ jobs:
         inlineScript: >
           az containerapp update -n frontend --revision-suffix ${{ env.BRANCH_NAME }} -g ${{ env.RESOURCE_GROUP_NAME }} -i ${{ env.RESOURCE_GROUP_NAME }}acr.azurecr.io/${{ env.FRONTEND_IMAGE }}:${{ env.BRANCH_NAME }}-${{ env.SHORT_SHA }}
 
-          az containerapp ingress traffic set --name frontend --resource-group ${{ env.RESOURCE_GROUP_NAME }} --revision-weight latest=50 "{{ env.BRANCH_NAME }}=50
+          az containerapp ingress traffic set --name frontend --resource-group ${{ env.RESOURCE_GROUP_NAME }} --revision-weight latest=50 ${{ env.BRANCH_NAME }}=50
           
     - name: logout
       run: >

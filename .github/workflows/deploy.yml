@@ -105,6 +105,12 @@ jobs:
       with:
         creds: ${{ secrets.AzureSPN }}
 
+    - name: Branch name
+      run: echo "running on branch ${{ env.BRANCH_NAME }}"
+
+    - name: Add SHORT_SHA env property with commit short sha
+      run: echo "SHORT_SHA=`echo ${GITHUB_SHA} | cut -c1-8`" >> $GITHUB_ENV
+
     - name: Login to ACR
       run: |
         set -euo pipefail
